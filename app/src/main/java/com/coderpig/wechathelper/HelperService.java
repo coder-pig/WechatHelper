@@ -12,7 +12,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import java.util.List;
 
 /**
- * 描述：
+ * 描述：微信监控服务类
  *
  * @author CoderPig on 2018/04/04 13:46.
  */
@@ -160,7 +160,6 @@ public class HelperService extends AccessibilityService {
     }
 
     private void addToGroup() {
-        Log.e(TAG, "addToGroup: 执行啦");
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         if (nodeInfo != null) {
             List<AccessibilityNodeInfo> listNodes = nodeInfo.findAccessibilityNodeInfosByViewId("android:id/list");
@@ -181,7 +180,7 @@ public class HelperService extends AccessibilityService {
                                 }
                             }
                         }
-                    },2000L);
+                    },1000L);
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -193,19 +192,26 @@ public class HelperService extends AccessibilityService {
                                 editNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
                             }
                         }
-                    }, 2500L);
+                    }, 2300L);
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             List<AccessibilityNodeInfo> cbNodes = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kr");
-                            if(cbNodes != null && cbNodes.size() > 1) {
-                                AccessibilityNodeInfo cbNode = cbNodes.get(1);
-                                cbNode.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                                AccessibilityNodeInfo sureNode = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/hd").get(0);
-                                sureNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                            if(cbNodes != null) {
+                                AccessibilityNodeInfo cbNode = null;
+                                if(cbNodes.size() == 1) {
+                                    cbNode = cbNodes.get(0);
+                                } else if(cbNodes.size() == 2) {
+                                    cbNode = cbNodes.get(1);
+                                }
+                                if (cbNode != null) {
+                                    cbNode.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                                    AccessibilityNodeInfo sureNode = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/hd").get(0);
+                                    sureNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                                }
                             }
                         }
-                    }, 2800L);
+                    }, 3000L);
                 }
             }
 
@@ -246,7 +252,7 @@ public class HelperService extends AccessibilityService {
             Log.i(TAG, "showDialog:" + info.canOpenPopup());
             Log.i(TAG, "Text：" + info.getText());
             Log.i(TAG, "windowId:" + info.getWindowId());
-            Log.i(TAG, "resId:" + info.getContentDescription());
+            Log.i(TAG, "desc:" + info.getContentDescription());
         } else {
             for (int i = 0; i < info.getChildCount(); i++) {
                 if (info.getChild(i) != null) {
