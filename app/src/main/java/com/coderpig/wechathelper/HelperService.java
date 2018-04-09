@@ -3,6 +3,7 @@ package com.coderpig.wechathelper;
 import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -20,7 +21,7 @@ public class HelperService extends AccessibilityService {
 
     private static final String TAG = "HelperService";
     private Handler handler = new Handler();
-    private String userName = "呵呵呵";
+    private String userName = "123";
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -44,7 +45,6 @@ public class HelperService extends AccessibilityService {
                 }
                 break;
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
-                Log.d(TAG, "TYPE_WINDOW_STATE_CHANGED");
                 switch (className) {
                     case "com.tencent.mm.plugin.subapp.ui.friend.FMessageConversationUI":
                         addFriend();
@@ -61,7 +61,24 @@ public class HelperService extends AccessibilityService {
                         }
                         break;
                     case "com.tencent.mm.ui.contact.ChatroomContactUI":
-                        inviteGroup();
+                        if (!userName.equals("123")) {
+                            inviteGroup();
+                        }
+                        break;
+                    case "com.tencent.mm.ui.chatting.ChattingUI":
+                        if (!userName.equals("123")) {
+                            openGroupSetting();
+                        }
+                        break;
+                    case "com.tencent.mm.plugin.chatroom.ui.ChatroomInfoUI":
+                        if (userName.equals("123")) {
+                            performBackClick();
+                        } else {
+                            addToGroup();
+                        }
+                        break;
+                    case "com.tencent.mm.ui.base.i":
+                        dialogClick();
                         break;
                 }
                 break;
@@ -92,15 +109,6 @@ public class HelperService extends AccessibilityService {
             userName = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/d0n").get(0).getText().toString();
             AccessibilityNodeInfo finishNode = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/hd").get(0);
             finishNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-                    if (nodeInfo != null) {
-                        recycle(nodeInfo);
-                    }
-                }
-            }, 500L);
         }
     }
 
@@ -136,13 +144,90 @@ public class HelperService extends AccessibilityService {
         if (nodeInfo != null) {
             List<AccessibilityNodeInfo> nodes = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a9v");
             for (AccessibilityNodeInfo info : nodes) {
-                if(info.getText().toString().equals("小猪的Python学习交流群")) {
-                    Log.d(TAG, "inviteGroup: Test" + info.getParent().getParent().getClassName().toString());
+                if (info.getText().toString().equals("小猪的Python学习交流群")) {
                     info.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
                     break;
                 }
             }
         }
+    }
+
+    private void openGroupSetting() {
+        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+        if (nodeInfo != null) {
+            nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/he").get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
+    }
+
+    private void addToGroup() {
+        Log.e(TAG, "addToGroup: 执行啦");
+        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+        if (nodeInfo != null) {
+            List<AccessibilityNodeInfo> listNodes = nodeInfo.findAccessibilityNodeInfosByViewId("android:id/list");
+            if(listNodes != null && listNodes.size() > 0) {
+                AccessibilityNodeInfo listNode = listNodes.get(0);
+                listNode.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+                listNode.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
+                final AccessibilityNodeInfo scrollNodeInfo = getRootInActiveWindow();
+                if (scrollNodeInfo != null) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            List<AccessibilityNodeInfo> nodes = scrollNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/d0b");
+                            for (AccessibilityNodeInfo info : nodes) {
+                                if (info.getContentDescription().toString().equals("添加成员")) {
+                                    info.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                                    break;
+                                }
+                            }
+                        }
+                    },2000L);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            List<AccessibilityNodeInfo> editNodes = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/arz");
+                            if(editNodes != null && editNodes.size() > 0) {
+                                AccessibilityNodeInfo editNode = editNodes.get(0);
+                                Bundle arguments = new Bundle();
+                                arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, userName);
+                                editNode.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
+                            }
+                        }
+                    }, 2500L);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            List<AccessibilityNodeInfo> cbNodes = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/kr");
+                            if(cbNodes != null && cbNodes.size() > 1) {
+                                AccessibilityNodeInfo cbNode = cbNodes.get(1);
+                                cbNode.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                                AccessibilityNodeInfo sureNode = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/hd").get(0);
+                                sureNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                            }
+                        }
+                    }, 2800L);
+                }
+            }
+
+        }
+
+    }
+
+    private void dialogClick() {
+        AccessibilityNodeInfo inviteNode = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aln").get(0);
+        inviteNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        userName = "123";
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                List<AccessibilityNodeInfo> sureNodes = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aln");
+                if(sureNodes != null && sureNodes.size() > 0) {
+                    AccessibilityNodeInfo sureNode = sureNodes.get(0);
+                    sureNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                }
+
+            }
+        },1000L);
     }
 
     private void performBackClick() {
@@ -154,7 +239,6 @@ public class HelperService extends AccessibilityService {
         }, 300L);
     }
 
-
     //遍历控件的方法
     public void recycle(AccessibilityNodeInfo info) {
         if (info.getChildCount() == 0) {
@@ -162,7 +246,7 @@ public class HelperService extends AccessibilityService {
             Log.i(TAG, "showDialog:" + info.canOpenPopup());
             Log.i(TAG, "Text：" + info.getText());
             Log.i(TAG, "windowId:" + info.getWindowId());
-            Log.i(TAG, "resId:" + info.getViewIdResourceName());
+            Log.i(TAG, "resId:" + info.getContentDescription());
         } else {
             for (int i = 0; i < info.getChildCount(); i++) {
                 if (info.getChild(i) != null) {
@@ -171,7 +255,6 @@ public class HelperService extends AccessibilityService {
             }
         }
     }
-
 
     @Override
     public void onInterrupt() {
