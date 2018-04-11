@@ -267,5 +267,8 @@ public class HelperService extends AccessibilityService {
 
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }
