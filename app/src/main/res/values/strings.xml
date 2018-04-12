@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">WechatHelper</string>
+    <string name="group_name">群聊名称</string>
+    <string name="sure">确定</string>
+    <string name="clear">清除</string>
+    <string name="add_friends">批量添加好友并拉人进群</string>
+    <string name="friends_square">朋友圈自动点赞</string>
+    <string name="catch_red_packet">自动抢红包</string>
 </resources>
