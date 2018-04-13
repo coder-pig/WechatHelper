@@ -1,10 +1,8 @@
 package com.coderpig.wechathelper
 
 import android.accessibilityservice.AccessibilityService
-import android.app.ActivityManager
 import android.app.Notification
 import android.app.PendingIntent
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -58,7 +56,7 @@ class HelperService : AccessibilityService() {
                         "com.tencent.mm.ui.base.i" -> dialogClick()
                     }
                 }
-                if (Hawk.get(Constant.FRIEND_SQUARE)) {
+                if (Hawk.get(Constant.FRIEND_SQUARE,false)) {
                     if (className == "com.tencent.mm.plugin.sns.ui.SnsTimeLineUI") {
                         autoZan()
                     }
@@ -80,13 +78,12 @@ class HelperService : AccessibilityService() {
                     }
                 }
             }
-            AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> {
-                if(className == "android.widget.TextView") {
-                    if(getRunningActivityName() == "com.tencent.mm.ui.LauncherUI") {
-                        openRedPacket()
-                    }
-                }
-            }
+            //滚动的时候也去监听红包，不过有点卡
+//            AccessibilityEvent.TYPE_VIEW_SCROLLED -> {
+//                if (className == "android.widget.ListView") {
+//                    openRedPacket()
+//                }
+//            }
         }
     }
 
@@ -246,39 +243,48 @@ class HelperService : AccessibilityService() {
         val nodeInfo = rootInActiveWindow
         if (nodeInfo != null) {
             while (true) {
-                val listNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ddn")
-                if (listNodes != null && listNodes.size > 0) {
-                    var listNode = listNodes[0]
-                    val zanNodes = listNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dao")
-                    for (zan in zanNodes) {
-                        zan.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        Thread.sleep(500)
-                        var zsNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/d_m")
-                        Thread.sleep(500)
-                        if (zsNodes != null && zsNodes.size > 0) {
-                            if (zsNodes[0].findAccessibilityNodeInfosByText("赞").size > 0) {
-                                zsNodes[0].performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                val rootNode = rootInActiveWindow
+                if (rootNode != null) {
+                    val listNodes = rootNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ddn")
+                    if (listNodes != null && listNodes.size > 0) {
+                        val listNode = listNodes[0]
+                        val zanNodes = listNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dao")
+                        for (zan in zanNodes) {
+                            zan.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                            Thread.sleep(300)
+                            val zsNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/d_m")
+                            Thread.sleep(300)
+                            if (zsNodes != null && zsNodes.size > 0) {
+                                if (zsNodes[0].findAccessibilityNodeInfosByText("赞").size > 0) {
+                                    zsNodes[0].performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                                }
                             }
+                            Thread.sleep(300)
                         }
-                        Thread.sleep(500)
+                        listNode.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)
                     }
-                    listNode.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)
+                } else {
+                    break
                 }
-
             }
         }
     }
 
     //遍历获得未打开红包
     private fun openRedPacket() {
-        val listNode = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a_c")
-        if (listNode != null && listNode.size > 0) {
-            val msgNodes = listNode[0].findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ad8")
-            if (msgNodes != null && msgNodes.size > 0) {
-                val rpNode = msgNodes[msgNodes.size - 1]
-                val rpStatusNode = rpNode.findAccessibilityNodeInfosByText("领取红包")
-                if (rpStatusNode != null && rpStatusNode.size > 0) {
-                    rpNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+        val rootNode = rootInActiveWindow
+        if(rootNode != null) {
+            val listNode = rootNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a_c")
+            if (listNode != null && listNode.size > 0) {
+                val msgNodes = listNode[0].findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ad8")
+                if (msgNodes != null && msgNodes.size > 0) {
+                    for(rpNode in msgNodes) {
+                        val rpStatusNode = rpNode.findAccessibilityNodeInfosByText("领取红包")
+                        if (rpStatusNode != null && rpStatusNode.size > 0) {
+                            rpNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                            break
+                        }
+                    }
                 }
             }
         }
@@ -294,8 +300,6 @@ class HelperService : AccessibilityService() {
             performBackClick()
         }
     }
-
-
 
     //遍历控件的方法
     fun recycle(info: AccessibilityNodeInfo) {
@@ -314,11 +318,6 @@ class HelperService : AccessibilityService() {
 
     private fun performBackClick() {
         handler.postDelayed({ performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK) }, 300L)
-    }
-
-    private fun getRunningActivityName(): String {
-        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        return activityManager.getRunningTasks(1)[0].topActivity.className
     }
 
 }
