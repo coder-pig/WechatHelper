@@ -6,4 +6,5 @@
     <string name="add_friends">批量添加好友并拉人进群</string>
     <string name="friends_square">朋友圈自动点赞</string>
     <string name="catch_red_packet">自动抢红包</string>
+    <string name="open_accessibility">打开辅助功能设置页</string>
 </resources>

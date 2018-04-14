@@ -1,6 +1,8 @@
 package com.coderpig.wechathelper
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import com.orhanobut.hawk.Hawk
 import kotlinx.android.synthetic.main.activity_control.*
@@ -30,6 +32,9 @@ class ControlActivity : AppCompatActivity() {
             Hawk.put(Constant.GROUP_NAME, "")
             shortToast("群聊名称已清除！")
             ed_group_name.setText("")
+        })
+        btn_open_accessbility.setOnClickListener({
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         })
         cb_add_friends.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) Hawk.put(Constant.ADD_FRIENDS, true) else Hawk.put(Constant.ADD_FRIENDS, false)
