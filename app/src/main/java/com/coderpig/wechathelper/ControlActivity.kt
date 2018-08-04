@@ -4,8 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.orhanobut.hawk.Hawk
 import kotlinx.android.synthetic.main.activity_control.*
+
 
 /**
  * 描述：辅助服务控制页
@@ -13,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_control.*
  * @author CoderPig on 2018/04/12 10:50.
  */
 class ControlActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_control)
@@ -24,6 +27,15 @@ class ControlActivity : AppCompatActivity() {
         cb_add_friends.isChecked = Hawk.get(Constant.ADD_FRIENDS,false)
         cb_friends_square.isChecked = Hawk.get(Constant.FRIEND_SQUARE,false)
         cb_catch_red_packet.isChecked = Hawk.get(Constant.RED_PACKET,false)
+        val members = Hawk.get(Constant.MEMBER_LIST, mutableListOf<String>())
+        if(members.size > 0) {
+            val sb = StringBuilder()
+            for (member in members) {
+                sb.append(member).append("\n")
+            }
+            ed_friends.setText(sb.toString())
+        }
+
         btn_sure.setOnClickListener({
             Hawk.put(Constant.GROUP_NAME, ed_group_name.text.toString())
             shortToast("群聊名称已保存！")
@@ -33,6 +45,24 @@ class ControlActivity : AppCompatActivity() {
             shortToast("群聊名称已清除！")
             ed_group_name.setText("")
         })
+
+        btn_write.setOnClickListener({
+            val memberList = (ed_friends.text.toString()).split("\n").filter{it.trim() != ""}
+            Hawk.put(Constant.MEMBER_LIST, memberList)
+            Log.e("Test",memberList.toString())
+            shortToast("数据写入成功！")
+        })
+
+        btn_reset.setOnClickListener({
+            Hawk.put(Constant.MEMBER_LIST, mutableListOf<String>())
+            ed_friends.setText("")
+            shortToast("数据重置成功！")
+        })
+
+        btn_open_wechat.setOnClickListener {
+            val intent = packageManager.getLaunchIntentForPackage("com.tencent.mm")
+            startActivity(intent)
+        }
         btn_open_accessbility.setOnClickListener({
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         })

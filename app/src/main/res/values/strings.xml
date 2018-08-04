@@ -3,8 +3,15 @@
     <string name="group_name">群聊名称</string>
     <string name="sure">确定</string>
     <string name="clear">清除</string>
-    <string name="add_friends">批量添加好友并拉人进群</string>
+    <string name="add_friends">批量拉人进群聊</string>
+    <string name="input_group_name_hint">请输入群聊名称</string>
     <string name="friends_square">朋友圈自动点赞</string>
     <string name="catch_red_packet">自动抢红包</string>
     <string name="open_accessibility">打开辅助功能设置页</string>
+    <string name="write_into">写入</string>
+    <string name="data_reset">重置</string>
+    <string name="open_wechat">打开微信</string>
+    <string name="add_to_group">拉人进群</string>
+    <string name="update_group_people">更新成员列表</string>
+    <string name="input_group_friends_hint">请输入昵称，回车换行代表一个</string>
 </resources>

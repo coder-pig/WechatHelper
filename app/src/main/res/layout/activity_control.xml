@@ -5,37 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/tv_group_name"
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/cb_add_friends"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/group_name"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="10dp"
+        android:text="@string/add_friends"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/ed_group_name"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginStart="10dp"
         android:maxLines="1"
+        android:hint="@string/input_group_name_hint"
         android:singleLine="true"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_group_name" />
+        app:layout_constraintTop_toBottomOf="@+id/cb_add_friends" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_sure"
         android:layout_width="64dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:text="@string/sure"
-        app:layout_constraintBottom_toBottomOf="@+id/ed_group_name"
-        app:layout_constraintStart_toEndOf="@+id/ed_group_name"
-        app:layout_constraintTop_toBottomOf="@+id/tv_group_name" />
+        app:layout_constraintStart_toStartOf="@+id/ed_group_name"
+        app:layout_constraintTop_toBottomOf="@+id/ed_group_name" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_clear"
@@ -47,6 +50,46 @@
         app:layout_constraintStart_toEndOf="@+id/btn_sure"
         app:layout_constraintTop_toTopOf="@+id/btn_sure" />
 
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/ed_friends"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:hint="@string/input_group_friends_hint"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_sure" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_write"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/write_into"
+        app:layout_constraintStart_toStartOf="@+id/ed_group_name"
+        app:layout_constraintTop_toBottomOf="@+id/ed_friends" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:text="@string/data_reset"
+        app:layout_constraintLeft_toRightOf="@id/btn_write"
+        app:layout_constraintTop_toBottomOf="@+id/ed_friends" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_open_wechat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:text="@string/open_wechat"
+        app:layout_constraintLeft_toRightOf="@id/btn_reset"
+        app:layout_constraintTop_toBottomOf="@+id/ed_friends" />
+
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/cb_friends_square"
         android:layout_width="0dp"
@@ -56,7 +99,7 @@
         android:text="@string/friends_square"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cb_add_friends" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_write" />
 
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/cb_catch_red_packet"
@@ -69,16 +112,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cb_friends_square" />
 
-    <android.support.v7.widget.AppCompatCheckBox
-        android:id="@+id/cb_add_friends"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/add_friends"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ed_group_name" />
 
     <Button
         android:id="@+id/btn_open_accessbility"
@@ -86,6 +119,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
+        android:padding="10dp"
         android:text="@string/open_accessibility"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cb_catch_red_packet" />
