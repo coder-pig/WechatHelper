@@ -2,8 +2,7 @@ package com.coderpig.wechathelper
 
 import android.accessibilityservice.AccessibilityService
 import android.app.Notification
-import android.app.PendingIntent
-import android.content.ContentValues.TAG
+import android.app.PendingIntent.CanceledException
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -37,7 +36,7 @@ class HelperService : AccessibilityService() {
                         "com.tencent.mm.ui.LauncherUI" -> openGroup()
                         "com.tencent.mm.ui.contact.ChatroomContactUI" -> searchGroup()
                         "com.tencent.mm.ui.chatting.ChattingUI" -> openGroupSetting()
-                        "com.tencent.mm.plugin.chatroom.ui.ChatroomInfoUI" -> openSelectContact()
+                        "com.tencent.mm.chatroom.ui.ChatroomInfoUI" -> openSelectContact()
                         "com.tencent.mm.ui.contact.SelectContactUI" -> addMembers()
                     }
                 }
@@ -45,7 +44,7 @@ class HelperService : AccessibilityService() {
                     dialogClick()
                 }
                 if (Hawk.get(Constant.FRIEND_SQUARE, false)) {
-                    if (className == "com.tencent.mm.plugin.sns.ui.SnsTimeLineUI ") {
+                    if (className == "com.tencent.mm.plugin.sns.ui.SnsTimeLineUI") {
                         autoZan()
                     }
                 }
@@ -66,7 +65,7 @@ class HelperService : AccessibilityService() {
                         val pendingIntent = notification.contentIntent
                         try {
                             pendingIntent.send()
-                        } catch (e: PendingIntent.CanceledException) {
+                        } catch (e: CanceledException) {
                             e.printStackTrace()
                         }
 
@@ -74,16 +73,13 @@ class HelperService : AccessibilityService() {
                 }
             }
 
-        //            //滚动的时候也去监听红包，不过有点卡
-////            AccessibilityEvent.TYPE_VIEW_SCROLLED -> {
-////                if (className == "android.widget.ListView") {
-////                    openRedPacket()
-////                }
-////            }
-//        }
-//    }
+            //滚动的时候也去监听红包，不过有点卡
+//            AccessibilityEvent.TYPE_VIEW_SCROLLED -> {
+//                if (className == "android.widget.ListView") {
+//                    openRedPacket()
+//                }
+//            }
         }
-
     }
 
 
@@ -91,14 +87,14 @@ class HelperService : AccessibilityService() {
     private fun openGroup() {
         val nodeInfo = rootInActiveWindow
         if (nodeInfo != null) {
-            val tabNodes = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/cdj")
+            val tabNodes = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/chq")
             for (tabNode in tabNodes) {
                 if (tabNode.text.toString() == "通讯录") {
                     tabNode.parent.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                     handler.postDelayed({
                         val newNodeInfo = rootInActiveWindow
                         if (newNodeInfo != null) {
-                            val tagNodes = newNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/k3")
+                            val tagNodes = newNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/li")
                             for (tagNode in tagNodes) {
                                 if (tagNode.text.toString() == "群聊") {
                                     tagNode.parent.parent.performAction(AccessibilityNodeInfo.ACTION_CLICK)
@@ -116,7 +112,7 @@ class HelperService : AccessibilityService() {
     private fun searchGroup() {
         val nodeInfo = rootInActiveWindow
         if (nodeInfo != null) {
-            val nodes = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aaq")
+            val nodes = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ad_")
             for (info in nodes) {
                 if (info.text.toString() == Hawk.get(Constant.GROUP_NAME)) {
                     info.parent.performAction(AccessibilityNodeInfo.ACTION_CLICK)
@@ -130,7 +126,7 @@ class HelperService : AccessibilityService() {
     private fun openGroupSetting() {
         val nodeInfo = rootInActiveWindow
         if (nodeInfo != null) {
-            nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/hh")[0].performAction(AccessibilityNodeInfo.ACTION_CLICK)
+            nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ix")[0].performAction(AccessibilityNodeInfo.ACTION_CLICK)
         }
     }
 
@@ -146,7 +142,7 @@ class HelperService : AccessibilityService() {
                 val scrollNodeInfo = rootInActiveWindow
                 if (scrollNodeInfo != null) {
                     handler.postDelayed({
-                        val nodes = scrollNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/d4_")
+                        val nodes = scrollNodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/d93")
                         for (info in nodes) {
                             if (info.contentDescription.toString() == "添加成员") {
                                 info.parent.performAction(AccessibilityNodeInfo.ACTION_CLICK)
@@ -167,7 +163,7 @@ class HelperService : AccessibilityService() {
                 handler.postDelayed({
                     val nodeInfo = rootInActiveWindow
                     if (nodeInfo != null) {
-                        val editNodes = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/au7")
+                        val editNodes = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/cmz")
                         if (editNodes != null && editNodes.size > 0) {
                             val editNode = editNodes[0]
                             val arguments = Bundle()
@@ -177,7 +173,7 @@ class HelperService : AccessibilityService() {
                     }
                 }, 500L * (i + 1))
                 handler.postDelayed({
-                    val cbNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/lp")
+                    val cbNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/nq")
                     if (cbNodes != null) {
                         val cbNode: AccessibilityNodeInfo?
                         if (cbNodes.size > 0) {
@@ -188,7 +184,7 @@ class HelperService : AccessibilityService() {
                     //最后一次的时候清空记录，并且点击顶部确定按钮
                     if (i == members.size - 1) {
                         Hawk.put(Constant.MEMBER_LIST, mutableListOf<String>())
-                        val sureNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/hg")
+                        val sureNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/iw")
                         if (sureNodes != null && sureNodes.size > 0) {
                             sureNodes[0].performAction(AccessibilityNodeInfo.ACTION_CLICK)
                         }
@@ -201,15 +197,13 @@ class HelperService : AccessibilityService() {
 
     //对话框自动点击
     private fun dialogClick() {
-        val inviteNode = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/an3")[0]
-        inviteNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
         handler.postDelayed({
-            val sureNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/an3")
-            if (sureNodes != null && sureNodes.size > 0) {
-                val sureNode = sureNodes[0]
+            val inviteNode = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/apk")
+            if (inviteNode != null && inviteNode.size > 0) {
+                val sureNode = inviteNode[0]
                 sureNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
             }
-        }, 1000L)
+        }, 500L)
         performBackClick()
     }
 
@@ -220,21 +214,21 @@ class HelperService : AccessibilityService() {
             while (true) {
                 val rootNode = rootInActiveWindow
                 if (rootNode != null) {
-                    val listNodes = rootNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dja")
+                    val listNodes = rootNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dor")
                     if (listNodes != null && listNodes.size > 0) {
                         val listNode = listNodes[0]
-                        val zanNodes = listNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dg4")
+                        val zanNodes = listNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dlk")
                         for (zan in zanNodes) {
                             zan.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                            Thread.sleep(300)
-                            val zsNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/df4")
-                            Thread.sleep(300)
+                            Thread.sleep(500)
+                            val zsNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/dkn")
+                            Thread.sleep(500)
                             if (zsNodes != null && zsNodes.size > 0) {
                                 if (zsNodes[0].findAccessibilityNodeInfosByText("赞").size > 0) {
                                     zsNodes[0].performAction(AccessibilityNodeInfo.ACTION_CLICK)
                                 }
                             }
-                            Thread.sleep(300)
+                            Thread.sleep(500)
                         }
                         listNode.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)
                     }
@@ -249,26 +243,31 @@ class HelperService : AccessibilityService() {
     private fun openRedPacket() {
         val rootNode = rootInActiveWindow
         if (rootNode != null) {
-            val listNode = rootNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ab_")
-            if (listNode != null && listNode.size > 0) {
-                val msgNodes = listNode[0].findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aem")
-                if (msgNodes != null && msgNodes.size > 0) {
-                    for (rpNode in msgNodes) {
-                        val rpStatusNode = rpNode.findAccessibilityNodeInfosByText("领取红包")
-                        if (rpStatusNode != null && rpStatusNode.size > 0) {
-                            rpNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                            break
+            val rFrameNode = rootNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ads");
+            if (rFrameNode != null && rFrameNode.size > 0) {
+                val listNode = rFrameNode[0].getChild(0)
+                if (listNode != null) {
+                    val msgNodes = listNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ah4")
+                    if (msgNodes != null && msgNodes.size > 0) {
+                        for (rpNode in msgNodes) {
+                            val rpStatusNode = rpNode.findAccessibilityNodeInfosByText("领取红包")
+                            if (rpStatusNode != null && rpStatusNode.size > 0) {
+                                rpNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                                break
+                            }
                         }
                     }
                 }
             }
+
+
         }
     }
 
     //打开红包
     private fun clickRedPacket() {
         val nodeInfo = rootInActiveWindow
-        val clickNode = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/c85")
+        val clickNode = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/cb2")
         if (clickNode != null && clickNode.size > 0) {
             clickNode[0].performAction(AccessibilityNodeInfo.ACTION_CLICK)
         } else {
@@ -293,6 +292,7 @@ class HelperService : AccessibilityService() {
 
     private fun performBackClick() {
         handler.postDelayed({ performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK) }, 1300L)
+        Log.e(TAG, "点击返回")
     }
 
 }

@@ -35,37 +35,33 @@ class ControlActivity : AppCompatActivity() {
             }
             ed_friends.setText(sb.toString())
         }
-
-        btn_sure.setOnClickListener({
+        btn_sure.setOnClickListener {
             Hawk.put(Constant.GROUP_NAME, ed_group_name.text.toString())
             shortToast("群聊名称已保存！")
-        })
-        btn_clear.setOnClickListener({
+        }
+        btn_clear.setOnClickListener {
             Hawk.put(Constant.GROUP_NAME, "")
             shortToast("群聊名称已清除！")
             ed_group_name.setText("")
-        })
-
-        btn_write.setOnClickListener({
+        }
+        btn_write.setOnClickListener {
             val memberList = (ed_friends.text.toString()).split("\n").filter{it.trim() != ""}
             Hawk.put(Constant.MEMBER_LIST, memberList)
             Log.e("Test",memberList.toString())
             shortToast("数据写入成功！")
-        })
-
-        btn_reset.setOnClickListener({
+        }
+        btn_reset.setOnClickListener {
             Hawk.put(Constant.MEMBER_LIST, mutableListOf<String>())
             ed_friends.setText("")
             shortToast("数据重置成功！")
-        })
-
+        }
         btn_open_wechat.setOnClickListener {
             val intent = packageManager.getLaunchIntentForPackage("com.tencent.mm")
             startActivity(intent)
         }
-        btn_open_accessbility.setOnClickListener({
+        btn_open_accessbility.setOnClickListener {
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-        })
+        }
         cb_add_friends.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) Hawk.put(Constant.ADD_FRIENDS, true) else Hawk.put(Constant.ADD_FRIENDS, false)
         }
@@ -76,6 +72,4 @@ class ControlActivity : AppCompatActivity() {
             if (isChecked) Hawk.put(Constant.RED_PACKET, true) else Hawk.put(Constant.RED_PACKET, false)
         }
     }
-
-
 }
