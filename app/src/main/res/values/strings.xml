@@ -13,5 +13,5 @@
     <string name="open_wechat">打开微信</string>
     <string name="add_to_group">拉人进群</string>
     <string name="update_group_people">更新成员列表</string>
-    <string name="input_group_friends_hint">请输入昵称，回车换行代表一个</string>
+    <string name="input_group_friends_hint">请复制粘贴加群Json</string>
 </resources>

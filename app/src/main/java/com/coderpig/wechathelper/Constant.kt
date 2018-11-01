@@ -13,6 +13,11 @@ class Constant {
         val FRIEND_LIST = "friend_list"
         val FRIEND_SQUARE ="friend_square"
         val RED_PACKET ="red_packet"
-        val MEMBER_LIST = "member_list"
+
+        val MEMBER = "member"
+        val GROUP_NAME_1 = "小猪的Python学习交流1群"
+        val GROUP_NAME_2 = "小猪的Python学习交流2群"
+        val GROUP_NAME_3 = "小猪的Android学习交流群"
+        val GROUP_NAME_4 = "技♂术交流\uD83C\uDE32"
     }
 }
