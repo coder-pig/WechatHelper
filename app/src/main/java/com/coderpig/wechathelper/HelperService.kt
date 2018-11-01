@@ -8,7 +8,6 @@ import android.os.Handler
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import android.widget.Toast
 import com.orhanobut.hawk.Hawk
 
 
@@ -46,7 +45,7 @@ class HelperService : AccessibilityService() {
                     dialogClick()
                 }
                 if (Hawk.get(Constant.FRIEND_SQUARE, false)) {
-                    if (className == "com.tencent.mm.plugin.sns.ui.SnsTimeLineUI ") {
+                    if (className == "com.tencent.mm.plugin.sns.ui.SnsTimeLineUI") {
                         autoZan()
                     }
                 }
@@ -84,7 +83,6 @@ class HelperService : AccessibilityService() {
 //        }
 //    }
         }
-
     }
 
 
@@ -180,6 +178,7 @@ class HelperService : AccessibilityService() {
 
     //4.滚动后点击添加按钮，打开添加成员页面
     private fun openSelectContact() {
+
         if(curGroup != "") {
             var members = arrayListOf<String>()
             when (curGroup) {
@@ -300,7 +299,7 @@ class HelperService : AccessibilityService() {
                                     zsNodes[0].performAction(AccessibilityNodeInfo.ACTION_CLICK)
                                 }
                             }
-                            Thread.sleep(300)
+                            Thread.sleep(500)
                         }
                         listNode.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)
                     }
@@ -328,6 +327,8 @@ class HelperService : AccessibilityService() {
                     }
                 }
             }
+
+
         }
     }
 
@@ -359,6 +360,7 @@ class HelperService : AccessibilityService() {
 
     private fun performBackClick() {
         handler.postDelayed({ performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK) }, 1300L)
+        Log.e(TAG, "点击返回")
     }
 
 }

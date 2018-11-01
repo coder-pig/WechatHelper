@@ -56,6 +56,4 @@ class ControlActivity : AppCompatActivity() {
             if (isChecked) Hawk.put(Constant.RED_PACKET, true) else Hawk.put(Constant.RED_PACKET, false)
         }
     }
-
-
 }
