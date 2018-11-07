@@ -15,6 +15,7 @@ public class Member implements Serializable {
     @SerializedName("Android") private ArrayList<String> android = new ArrayList<>();
     @SerializedName("Speak") private ArrayList<String> speak = new ArrayList<>();
     @SerializedName("Python2") private ArrayList<String> python_2 = new ArrayList<>();
+    @SerializedName("Guy") private ArrayList<String> guy = new ArrayList<>();
 
     public ArrayList<String> getPython_1() {
         return python_1;
@@ -46,5 +47,13 @@ public class Member implements Serializable {
 
     public void setPython_2(ArrayList<String> python_2) {
         this.python_2 = python_2;
+    }
+
+    public ArrayList<String> getGuy() {
+        return guy;
+    }
+
+    public void setGuy(ArrayList<String> guy) {
+        this.guy = guy;
     }
 }

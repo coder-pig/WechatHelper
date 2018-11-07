@@ -19,5 +19,6 @@ class Constant {
         val GROUP_NAME_2 = "小猪的Python学习交流2群"
         val GROUP_NAME_3 = "小猪的Android学习交流群"
         val GROUP_NAME_4 = "技♂术交流\uD83C\uDE32"
+        val GROUP_NAME_5 = "抠腚男孩的妙妙屋"
     }
 }

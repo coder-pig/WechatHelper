@@ -85,16 +85,16 @@ class HelperService : AccessibilityService() {
         }
     }
 
-
     //1.打开群聊
     private fun openGroup() {
         mMember = Hawk.get<Member>(Constant.MEMBER)
-        if(mMember.python_1.size != 0 || mMember.android.size != 0 || mMember.speak.size != 0 || mMember.python_2.size != 0) {
+        if(mMember.python_1.size != 0 || mMember.android.size != 0 || mMember.speak.size != 0 || mMember.python_2.size != 0 || mMember.guy.size != 0) {
             curGroup = when {
                 mMember.python_1.size > 0 -> Constant.GROUP_NAME_1
-                mMember.android.size > 0 -> Constant.GROUP_NAME_2
-                mMember.speak.size > 0 -> Constant.GROUP_NAME_3
-                mMember.python_2.size > 0 -> Constant.GROUP_NAME_4
+                mMember.python_2.size > 0 -> Constant.GROUP_NAME_2
+                mMember.android.size > 0 -> Constant.GROUP_NAME_3
+                mMember.speak.size > 0 -> Constant.GROUP_NAME_4
+                mMember.guy.size > 0 -> Constant.GROUP_NAME_5
                 else -> ""
             }
             val nodeInfo = rootInActiveWindow
@@ -147,7 +147,7 @@ class HelperService : AccessibilityService() {
                 }
             }
             Constant.GROUP_NAME_2 -> {
-                if(mMember.android.size > 0) {
+                if(mMember.python_2.size > 0) {
                     val nodeInfo = rootInActiveWindow
                     if (nodeInfo != null) {
                         nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/j1")[0].performAction(AccessibilityNodeInfo.ACTION_CLICK)
@@ -155,7 +155,7 @@ class HelperService : AccessibilityService() {
                 }
             }
             Constant.GROUP_NAME_3 -> {
-                if(mMember.speak.size > 0) {
+                if(mMember.android.size > 0) {
                     val nodeInfo = rootInActiveWindow
                     if (nodeInfo != null) {
                         nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/j1")[0].performAction(AccessibilityNodeInfo.ACTION_CLICK)
@@ -163,7 +163,15 @@ class HelperService : AccessibilityService() {
                 }
             }
             Constant.GROUP_NAME_4 -> {
-                if(mMember.python_2.size > 0) {
+                if(mMember.speak.size > 0) {
+                    val nodeInfo = rootInActiveWindow
+                    if (nodeInfo != null) {
+                        nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/j1")[0].performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                    }
+                }
+            }
+            Constant.GROUP_NAME_5 -> {
+                if(mMember.guy.size > 0) {
                     val nodeInfo = rootInActiveWindow
                     if (nodeInfo != null) {
                         nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/j1")[0].performAction(AccessibilityNodeInfo.ACTION_CLICK)
@@ -183,9 +191,10 @@ class HelperService : AccessibilityService() {
             var members = arrayListOf<String>()
             when (curGroup) {
                 Constant.GROUP_NAME_1 -> members = mMember.python_1
-                Constant.GROUP_NAME_2 -> members = mMember.android
-                Constant.GROUP_NAME_3 -> members = mMember.speak
-                Constant.GROUP_NAME_4 -> members = mMember.python_2
+                Constant.GROUP_NAME_2 -> members = mMember.python_2
+                Constant.GROUP_NAME_3 -> members = mMember.android
+                Constant.GROUP_NAME_4 -> members = mMember.speak
+                Constant.GROUP_NAME_5 -> members = mMember.guy
             }
             if (members.size > 0) {
                 val nodeInfo = rootInActiveWindow
@@ -223,9 +232,10 @@ class HelperService : AccessibilityService() {
         //最后一次的时候清空记录，并且点击顶部确定按钮
         when (curGroup) {
             Constant.GROUP_NAME_1 -> members = mMember.python_1
-            Constant.GROUP_NAME_2 -> members = mMember.android
-            Constant.GROUP_NAME_3 -> members = mMember.speak
-            Constant.GROUP_NAME_4 -> members = mMember.python_2
+            Constant.GROUP_NAME_2 -> members = mMember.python_2
+            Constant.GROUP_NAME_3 -> members = mMember.android
+            Constant.GROUP_NAME_4 -> members = mMember.speak
+            Constant.GROUP_NAME_5 -> members = mMember.guy
         }
         if (members.size > 0) {
             for (i in 0 until members.size) {
@@ -255,9 +265,10 @@ class HelperService : AccessibilityService() {
                         val m = Hawk.get<Member>(Constant.MEMBER)
                         when (curGroup) {
                             Constant.GROUP_NAME_1 -> m.python_1 = arrayListOf()
-                            Constant.GROUP_NAME_2 -> m.android = arrayListOf()
-                            Constant.GROUP_NAME_3 -> m.speak = arrayListOf()
-                            Constant.GROUP_NAME_4 -> m.python_2 = arrayListOf()
+                            Constant.GROUP_NAME_2 -> m.python_2 = arrayListOf()
+                            Constant.GROUP_NAME_3 -> m.android = arrayListOf()
+                            Constant.GROUP_NAME_4 -> m.speak = arrayListOf()
+                            Constant.GROUP_NAME_5 -> m.guy = arrayListOf()
                         }
                         Hawk.put(Constant.MEMBER, m)
                         curGroup = ""
@@ -267,7 +278,7 @@ class HelperService : AccessibilityService() {
                         }
 
                     }
-                }, 700L * (i + 1))
+                }, 800L * (i + 1))
             }
         }
     }
@@ -292,7 +303,7 @@ class HelperService : AccessibilityService() {
                         for (zan in zanNodes) {
                             zan.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                             Thread.sleep(300)
-                            val zsNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e1l")
+                            val zsNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/e1j")
                             Thread.sleep(300)
                             if (zsNodes != null && zsNodes.size > 0) {
                                 if (zsNodes[0].findAccessibilityNodeInfosByText("赞").size > 0) {
