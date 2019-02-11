@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public class Member implements Serializable {
     @SerializedName("Python") private ArrayList<String> python_1 = new ArrayList<>();
     @SerializedName("Android") private ArrayList<String> android = new ArrayList<>();
-    @SerializedName("Speak") private ArrayList<String> speak = new ArrayList<>();
     @SerializedName("Python2") private ArrayList<String> python_2 = new ArrayList<>();
     @SerializedName("Guy") private ArrayList<String> guy = new ArrayList<>();
 
@@ -31,14 +30,6 @@ public class Member implements Serializable {
 
     public void setAndroid(ArrayList<String> android) {
         this.android = android;
-    }
-
-    public ArrayList<String> getSpeak() {
-        return speak;
-    }
-
-    public void setSpeak(ArrayList<String> speak) {
-        this.speak = speak;
     }
 
     public ArrayList<String> getPython_2() {
