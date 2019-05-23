@@ -12,7 +12,6 @@ class Constant {
         val UPDATE_GROUP_PEOPLE ="update_group_people"
         val FRIEND_LIST = "friend_list"
         val FRIEND_SQUARE ="friend_square"
-        val RED_PACKET ="red_packet"
 
         val MEMBER = "member"
         val GROUP_NAME_1 = "小猪的Python学习交流1群"

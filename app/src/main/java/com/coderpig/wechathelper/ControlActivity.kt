@@ -25,7 +25,6 @@ class ControlActivity : AppCompatActivity() {
     private fun initView() {
         cb_add_friends.isChecked = Hawk.get(Constant.ADD_FRIENDS,false)
         cb_friends_square.isChecked = Hawk.get(Constant.FRIEND_SQUARE,false)
-        cb_catch_red_packet.isChecked = Hawk.get(Constant.RED_PACKET,false)
 
         btn_write.setOnClickListener {
             val member = Gson().fromJson(ed_friends.text.toString(), Member::class.java)
@@ -51,9 +50,6 @@ class ControlActivity : AppCompatActivity() {
         }
         cb_friends_square.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) Hawk.put(Constant.FRIEND_SQUARE, true) else Hawk.put(Constant.FRIEND_SQUARE, false)
-        }
-        cb_catch_red_packet.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) Hawk.put(Constant.RED_PACKET, true) else Hawk.put(Constant.RED_PACKET, false)
         }
     }
 }
